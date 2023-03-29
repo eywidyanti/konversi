@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:konversi/widget/list/text.dart';
 import 'Convert.dart';
 import 'Input.dart';
+import 'Result.dart';
 
 class View extends StatefulWidget {
   const View({Key? key}) : super(key: key);
@@ -17,6 +17,14 @@ class _ViewState extends State<View> {
 
   final etInput = TextEditingController();
 
+  String _newValue = "Kelvin";
+  double _result = 0;
+  String changeValue = "";
+
+  List<String> listViewItem = <String>[];
+
+  var listItem = ["Kelvin", "Reamur"];
+
   get key => null;
 
   @override
@@ -28,9 +36,13 @@ class _ViewState extends State<View> {
   void konversiSuhu() {
     setState(() {
       _inputUser = double.parse(etInput.text);
-      _reamur = (_inputUser - 273.15) * 0.8;
-      _kelvin = 273.15 + _inputUser;
+      if (_newValue == "Kelvin")
+        _result = _inputUser + 273;
+      else
+        _result = (4 / 5) * _inputUser;
     });
+
+    listViewItem.add(_result.toString());
   }
 
   @override
@@ -40,20 +52,37 @@ class _ViewState extends State<View> {
       child: Column(
         children: [
           Input(etInput: etInput),
+          DropdownButton<String>(
+            items: listItem.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            value: _newValue,
+            onChanged: (String? changeValue) {
+              setState(() {
+                _newValue = changeValue!;
+                konversiSuhu();
+              });
+            },
+          ),
+          Result(result: _result),
+          Convert(konvertHandler: konversiSuhu),
+          Container(child: const Text("Riwayat Konversi")),
           Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                MyText(
-                    text1: 'Suhu dalam Kelvin',
-                    text2: _kelvin.toStringAsFixed(2)),
-                MyText(
-                    text1: 'Suhu dalam Reamor',
-                    text2: _reamur.toStringAsFixed(2)),
-              ],
+            child: ListView(
+              children: listViewItem.map((String value) {
+                return Container(
+                  margin: const EdgeInsets.all(10),
+                  child: Text(
+                    value,
+                    style: const TextStyle(fontSize: 15),
+                  ),
+                );
+              }).toList(),
             ),
           ),
-          Convert(konvertHandler: konversiSuhu),
         ],
       ),
     );

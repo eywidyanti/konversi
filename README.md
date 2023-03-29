@@ -3,9 +3,8 @@
 A new Flutter project.
 
 ## Getting Started
-![awal](image/awal.jpeg)
-![input](image/input.jpeg)
-![output](image/output.jpeg)
+Update
+![awal](image/baru.png)
 
 This project is a starting point for a Flutter application.
 
